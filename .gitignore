@@ -1,11 +1,1 @@
-tmp/
-components/
-managed_components/
 build/
-.vscode/
-.devcontainer/
-sdkconfig.old
-dependencies.lock
-.env
-releases/
-main/assets/lang_config.h
