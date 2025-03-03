@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 小智 AI 聊天机器人 （XiaoZhi AI Chatbot）
 
 （中文 | [English](README_en.md) | [日本語](README_ja.md)）
@@ -139,7 +138,3 @@
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=78/xiaozhi-esp32&type=Date" />
  </picture>
 </a>
-=======
-# xiaozhiai
-xiaozhi_ai remix version for lichuang esp32s3 expansion board
->>>>>>> f24b3c02f489f6bbce9aed04e38d1ea6a1e09179
