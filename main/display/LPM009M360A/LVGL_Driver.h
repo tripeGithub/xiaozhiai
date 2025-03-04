@@ -10,7 +10,7 @@
 #include "demos/lv_demos.h"
 
 //#include "ST7789.h"
-#include "JDI_LPM009M360A.h"
+#include "display/LPM009M360A/JDI_LPM009M360A.h"
 //#include "encoder.h"
 //#include "buzzer.h"
 
@@ -36,7 +36,7 @@ bool example_notify_lvgl_flush_ready(esp_lcd_panel_io_handle_t panel_io, esp_lcd
 void example_increase_lvgl_tick(void *arg);
 
 void jdi_lvgl_flush_cb(lv_display_t *drv, const lv_area_t *area, uint8_t *color_p);
-void jdi_lvgl_invalidate_cb(lv_display_t *drv, const lv_area_t *area);
+void jdi_lvgl_invalidate_cb(lv_event_t *area);
 
 
 void LVGL_Init(void);                     // Call this function to initialize the screen (must be called in the main function) !!!!!

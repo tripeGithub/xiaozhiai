@@ -9,6 +9,8 @@
 #include "iot/thing_manager.h"
 #include "led/single_led.h"
 
+#include "display/LPM009M360A/JDI_LPM009M360A.h"
+
 #include <esp_log.h>
 #include <esp_lcd_panel_vendor.h>
 #include <driver/i2c_master.h>
@@ -41,7 +43,7 @@ private:
     i2c_master_dev_handle_t pca9557_handle_;
     Button boot_button_;
     LcdDisplay* display_;
-    Pca9557* pca9557_;
+    //Pca9557* pca9557_;
 
     void InitializeI2c() {
         // Initialize I2C peripheral
@@ -108,6 +110,7 @@ private:
         io_config.lcd_param_bits = 8;
         //ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(SPI3_HOST, &io_config, &panel_io));
         ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(SPI2_HOST, &io_config, &panel_io));
+        //ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi_user(SPI2_HOST, &io_config, &panel_io));
 
         // 初始化液晶屏驱动芯片ST7789
         ESP_LOGD(TAG, "Install LCD driver");
@@ -117,13 +120,21 @@ private:
         panel_config.bits_per_pixel = 16;
         ESP_ERROR_CHECK(esp_lcd_new_panel_st7789(panel_io, &panel_config, &panel));
         
-        esp_lcd_panel_reset(panel);
+        //esp_lcd_panel_reset(panel);
+
         //pca9557_->SetOutputState(0, 0);
 
-        esp_lcd_panel_init(panel);
-        esp_lcd_panel_invert_color(panel, true);
-        esp_lcd_panel_swap_xy(panel, DISPLAY_SWAP_XY);
-        esp_lcd_panel_mirror(panel, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y);
+        //esp_lcd_panel_init(panel);
+        //esp_lcd_panel_invert_color(panel, true);
+        //esp_lcd_panel_swap_xy(panel, DISPLAY_SWAP_XY);
+        //esp_lcd_panel_mirror(panel, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y);
+
+        JDI_LCD_Date_Init();
+
+        JDI_LCD_DISP_PIN_Config();
+
+        JDI_LCD_DISP_ON();
+
         display_ = new SpiLcdDisplay(panel_io, panel, DISPLAY_BACKLIGHT_PIN, DISPLAY_BACKLIGHT_OUTPUT_INVERT,
                                     DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_OFFSET_X, DISPLAY_OFFSET_Y, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y, DISPLAY_SWAP_XY,
                                     {

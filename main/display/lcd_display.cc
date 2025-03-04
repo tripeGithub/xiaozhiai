@@ -38,11 +38,13 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
     ESP_ERROR_CHECK(esp_timer_create(&timer_args, &backlight_timer_));
     InitializeBacklight(backlight_pin);
 
+    
     // draw white
     std::vector<uint16_t> buffer(width_, 0xFFFF);
     for (int y = 0; y < height_; y++) {
         esp_lcd_panel_draw_bitmap(panel_, 0, y, width_, y + 1, buffer.data());
     }
+    
 
     // Set the display to on
     ESP_LOGI(TAG, "Turning display on");

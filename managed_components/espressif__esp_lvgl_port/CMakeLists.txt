@@ -109,6 +109,7 @@ add_library(lvgl_port_lib STATIC
     ${ADD_SRCS}
     )
 target_include_directories(lvgl_port_lib PUBLIC "include")
+#target_include_directories(lvgl_port_lib PUBLIC "priv_include")
 target_include_directories(lvgl_port_lib PRIVATE "priv_include")
 target_link_libraries(lvgl_port_lib PUBLIC
     idf::esp_lcd

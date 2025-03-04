@@ -87,7 +87,7 @@ void JDI_LCD_DISP_OFF(void);
 void JDI_LCD_SPI_Pixel_DMA_Send(uint8_t *image, uint32_t len);
 
 void JDI_LCD_Init(void);
-
+void JDI_LCD_Date_Init();
 
 void LCD_Init(void);                     // Call this function to initialize the screen (must be called in the main function) !!!!!
 
