@@ -233,18 +233,21 @@ void lvgl_port_flush_ready(lv_display_t *disp)
 
 static lv_display_t *lvgl_port_add_disp_priv(const lvgl_port_display_cfg_t *disp_cfg, const lvgl_port_disp_priv_cfg_t *priv_cfg)
 {
+    // 声明变量
     esp_err_t ret = ESP_OK;
     lv_display_t *disp = NULL;
     lv_color_t *buf1 = NULL;
     lv_color_t *buf2 = NULL;
     uint32_t buffer_size = 0;
     SemaphoreHandle_t trans_sem = NULL;
+    // 断言参数不为空
     assert(disp_cfg != NULL);
     assert(disp_cfg->panel_handle != NULL);
     assert(disp_cfg->buffer_size > 0);
     assert(disp_cfg->hres > 0);
     assert(disp_cfg->vres > 0);
 
+    // 获取缓冲区大小
     buffer_size = disp_cfg->buffer_size;
 
     /* Check supported display color formats */

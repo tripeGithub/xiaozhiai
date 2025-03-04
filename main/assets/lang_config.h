@@ -11,6 +11,9 @@ namespace Lang {
     namespace Strings {
         constexpr const char* ACCESS_VIA_BROWSER = "，浏览器访问 ";
         constexpr const char* ACTIVATION = "激活设备";
+        constexpr const char* BATTERY_CHARGING = "正在充电";
+        constexpr const char* BATTERY_FULL = "电量已满";
+        constexpr const char* BATTERY_LOW = "电量不足";
         constexpr const char* CONNECTED_TO = "已连接 ";
         constexpr const char* CONNECTING = "连接中...";
         constexpr const char* CONNECT_TO = "连接 ";
@@ -18,9 +21,12 @@ namespace Lang {
         constexpr const char* DETECTING_MODULE = "检测模组...";
         constexpr const char* ENTERING_WIFI_CONFIG_MODE = "进入配网模式...";
         constexpr const char* ERROR = "错误";
+        constexpr const char* INFO = "信息";
         constexpr const char* INITIALIZING = "正在初始化...";
         constexpr const char* LISTENING = "聆听中...";
         constexpr const char* LOADING_PROTOCOL = "加载协议...";
+        constexpr const char* MAX_VOLUME = "最大音量";
+        constexpr const char* MUTED = "已静音";
         constexpr const char* NEW_VERSION = "新版本 ";
         constexpr const char* OTA_UPGRADE = "OTA 升级";
         constexpr const char* PIN_ERROR = "请插入 SIM 卡";
@@ -36,6 +42,8 @@ namespace Lang {
         constexpr const char* UPGRADE_FAILED = "升级失败";
         constexpr const char* UPGRADING = "正在升级系统...";
         constexpr const char* VERSION = "版本 ";
+        constexpr const char* VOLUME = "音量 ";
+        constexpr const char* WARNING = "警告";
         constexpr const char* WIFI_CONFIG_MODE = "配网模式";
     }
 
@@ -133,11 +141,32 @@ namespace Lang {
         static_cast<size_t>(p3_err_reg_end - p3_err_reg_start)
         };
 
+        extern const char p3_exclamation_start[] asm("_binary_exclamation_p3_start");
+        extern const char p3_exclamation_end[] asm("_binary_exclamation_p3_end");
+        static const std::string_view P3_EXCLAMATION {
+        static_cast<const char*>(p3_exclamation_start),
+        static_cast<size_t>(p3_exclamation_end - p3_exclamation_start)
+        };
+
+        extern const char p3_success_start[] asm("_binary_success_p3_start");
+        extern const char p3_success_end[] asm("_binary_success_p3_end");
+        static const std::string_view P3_SUCCESS {
+        static_cast<const char*>(p3_success_start),
+        static_cast<size_t>(p3_success_end - p3_success_start)
+        };
+
         extern const char p3_upgrade_start[] asm("_binary_upgrade_p3_start");
         extern const char p3_upgrade_end[] asm("_binary_upgrade_p3_end");
         static const std::string_view P3_UPGRADE {
         static_cast<const char*>(p3_upgrade_start),
         static_cast<size_t>(p3_upgrade_end - p3_upgrade_start)
+        };
+
+        extern const char p3_vibration_start[] asm("_binary_vibration_p3_start");
+        extern const char p3_vibration_end[] asm("_binary_vibration_p3_end");
+        static const std::string_view P3_VIBRATION {
+        static_cast<const char*>(p3_vibration_start),
+        static_cast<size_t>(p3_vibration_end - p3_vibration_start)
         };
 
         extern const char p3_welcome_start[] asm("_binary_welcome_p3_start");
