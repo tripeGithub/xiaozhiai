@@ -22,7 +22,7 @@
 #define JDI_LCD_SPI_HOST             SPI2_HOST
 
 //设置LCD SPI引脚
-#define JDI_LCD_DISP_PIN        14//3//15
+#define JDI_LCD_DISP_PIN        3//14//3//15
 #define JDI_LCD_CS_PIN          13//4//16
 
 #define JDI_LCD_SPI_CLK_PIN     12//5//17
@@ -88,6 +88,7 @@ void JDI_LCD_SPI_Pixel_DMA_Send(uint8_t *image, uint32_t len);
 
 void JDI_LCD_Init(void);
 void JDI_LCD_Date_Init();
+void JDI_LCD_Clear_Screen(uint8_t jdi_cmd);
 
 void LCD_Init(void);                     // Call this function to initialize the screen (must be called in the main function) !!!!!
 

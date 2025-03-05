@@ -20,9 +20,13 @@ Display::Display() {
     // Notification timer
     esp_timer_create_args_t notification_timer_args = {
         .callback = [](void *arg) {
+            // 将arg转换为Display指针
             Display *display = static_cast<Display*>(arg);
+            // 创建DisplayLockGuard对象，用于锁定display
             DisplayLockGuard lock(display);
+            // 将notification_label_的隐藏标志位设为true
             lv_obj_add_flag(display->notification_label_, LV_OBJ_FLAG_HIDDEN);
+            // 将status_label_的隐藏标志位设为false
             lv_obj_clear_flag(display->status_label_, LV_OBJ_FLAG_HIDDEN);
         },
         .arg = this,
@@ -72,8 +76,11 @@ void Display::SetStatus(const char* status) {
     if (status_label_ == nullptr) {
         return;
     }
+    // 设置状态标签的文本
     lv_label_set_text(status_label_, status);
+    // 清除状态标签的隐藏标志
     lv_obj_clear_flag(status_label_, LV_OBJ_FLAG_HIDDEN);
+    // 添加通知标签的隐藏标志
     lv_obj_add_flag(notification_label_, LV_OBJ_FLAG_HIDDEN);
 }
 
@@ -86,11 +93,16 @@ void Display::ShowNotification(const char* notification, int duration_ms) {
     if (notification_label_ == nullptr) {
         return;
     }
+    // 设置通知标签的文本
     lv_label_set_text(notification_label_, notification);
+    // 显示通知标签
     lv_obj_clear_flag(notification_label_, LV_OBJ_FLAG_HIDDEN);
+    // 隐藏状态标签
     lv_obj_add_flag(status_label_, LV_OBJ_FLAG_HIDDEN);
 
+    // 停止通知定时器
     esp_timer_stop(notification_timer_);
+    // 启动通知定时器，持续时间为duration_ms * 1000毫秒
     ESP_ERROR_CHECK(esp_timer_start_once(notification_timer_, duration_ms * 1000));
 }
 

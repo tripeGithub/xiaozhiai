@@ -11,6 +11,9 @@
 
 #include "board.h"
 
+#include "LPM009M360A/LVGL_Driver.h"
+#include "LPM009M360A/JDI_LPM009M360A.h"
+
 #define TAG "LcdDisplay"
 #define LCD_LEDC_CH LEDC_CHANNEL_0
 
@@ -36,16 +39,16 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
         .skip_unhandled_events = true,
     };
     ESP_ERROR_CHECK(esp_timer_create(&timer_args, &backlight_timer_));
-    InitializeBacklight(backlight_pin);
+    //InitializeBacklight(backlight_pin);
 
-    
+    /*
     // draw white
     std::vector<uint16_t> buffer(width_, 0xFFFF);
     for (int y = 0; y < height_; y++) {
         esp_lcd_panel_draw_bitmap(panel_, 0, y, width_, y + 1, buffer.data());
     }
-    
-
+    */
+   
     // Set the display to on
     ESP_LOGI(TAG, "Turning display on");
     ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(panel_, true));
@@ -93,6 +96,11 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
     if (offset_x != 0 || offset_y != 0) {
         lv_display_set_offset(display_, offset_x, offset_y);
     }
+
+    lv_display_set_flush_cb(display_, jdi_lvgl_flush_cb);
+    //lv_display_add_event_cb(display_, jdi_lvgl_invalidate_cb, LV_EVENT_INVALIDATE_AREA, display_cfg);
+
+
 
     SetupUI();
 
@@ -286,72 +294,119 @@ void LcdDisplay::Unlock() {
 void LcdDisplay::SetupUI() {
     DisplayLockGuard lock(this);
 
+    // 获取当前屏幕
     auto screen = lv_screen_active();
+    // 设置屏幕上的文本字体
     lv_obj_set_style_text_font(screen, fonts_.text_font, 0);
+    // 设置屏幕上的文本颜色为黑色
     lv_obj_set_style_text_color(screen, lv_color_black(), 0);
 
     /* Container */
+    // 创建一个容器对象
     container_ = lv_obj_create(screen);
+    // 设置容器对象的大小为屏幕大小
     lv_obj_set_size(container_, LV_HOR_RES, LV_VER_RES);
+    // 设置容器对象的布局方式为垂直布局
     lv_obj_set_flex_flow(container_, LV_FLEX_FLOW_COLUMN);
+    // 设置容器对象的内边距为0
     lv_obj_set_style_pad_all(container_, 0, 0);
+    // 设置容器对象的边框宽度为0
     lv_obj_set_style_border_width(container_, 0, 0);
+    // 设置容器对象的行间距为0
     lv_obj_set_style_pad_row(container_, 0, 0);
 
     /* Status bar */
+    // 创建状态栏对象
     status_bar_ = lv_obj_create(container_);
+    // 设置状态栏大小
     lv_obj_set_size(status_bar_, LV_HOR_RES, fonts_.text_font->line_height);
+    // 设置状态栏圆角
     lv_obj_set_style_radius(status_bar_, 0, 0);
     
     /* Content */
-    content_ = lv_obj_create(container_);
-    lv_obj_set_scrollbar_mode(content_, LV_SCROLLBAR_MODE_OFF);
-    lv_obj_set_style_radius(content_, 0, 0);
-    lv_obj_set_width(content_, LV_HOR_RES);
-    lv_obj_set_flex_grow(content_, 1);
+    content_ = lv_obj_create(container_); // 创建一个对象，作为容器
+    lv_obj_set_scrollbar_mode(content_, LV_SCROLLBAR_MODE_OFF); // 设置滚动条模式为关闭
+    lv_obj_set_style_radius(content_, 0, 0); // 设置圆角为0
+    lv_obj_set_width(content_, LV_HOR_RES); // 设置宽度为屏幕宽度
+    lv_obj_set_flex_grow(content_, 1); // 设置弹性增长为1
 
     lv_obj_set_flex_flow(content_, LV_FLEX_FLOW_COLUMN); // 垂直布局（从上到下）
     lv_obj_set_flex_align(content_, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_EVENLY); // 子对象居中对齐，等距分布
 
+    // 创建一个标签对象
     emotion_label_ = lv_label_create(content_);
+    // 设置标签的字体为font_awesome_30_4
     lv_obj_set_style_text_font(emotion_label_, &font_awesome_30_4, 0);
+    // 设置标签的文本为FONT_AWESOME_AI_CHIP
     lv_label_set_text(emotion_label_, FONT_AWESOME_AI_CHIP);
 
+    // 创建一个标签，用于显示聊天消息
     chat_message_label_ = lv_label_create(content_);
+    // 设置标签的文本为空字符串
     lv_label_set_text(chat_message_label_, "");
     lv_obj_set_width(chat_message_label_, LV_HOR_RES * 0.9); // 限制宽度为屏幕宽度的 90%
     lv_label_set_long_mode(chat_message_label_, LV_LABEL_LONG_WRAP); // 设置为自动换行模式
     lv_obj_set_style_text_align(chat_message_label_, LV_TEXT_ALIGN_CENTER, 0); // 设置文本居中对齐
 
+    //lv_obj_set_style_border_width(chat_message_label_, 0, 0);
+    //lv_obj_set_style_border_opa(chat_message_label_, LV_OPA_TRANSP, 0);
+
     /* Status bar */
+    // 设置状态栏的布局方式为水平排列
     lv_obj_set_flex_flow(status_bar_, LV_FLEX_FLOW_ROW);
+    // 设置状态栏的内边距为0
     lv_obj_set_style_pad_all(status_bar_, 0, 0);
+    // 设置状态栏的边框宽度为0
     lv_obj_set_style_border_width(status_bar_, 0, 0);
+    // 设置状态栏的列间距为0
     lv_obj_set_style_pad_column(status_bar_, 0, 0);
+    // 设置状态栏的左边距为2
     lv_obj_set_style_pad_left(status_bar_, 2, 0);
+    // 设置状态栏的右边距为2
     lv_obj_set_style_pad_right(status_bar_, 2, 0);
 
+    //lv_obj_set_style_border_opa(status_bar_, LV_OPA_TRANSP, 0);
+
+    // 创建一个标签对象，用于显示网络状态
     network_label_ = lv_label_create(status_bar_);
+    // 设置标签的文本为空
     lv_label_set_text(network_label_, "");
+    // 设置标签的字体为图标字体
     lv_obj_set_style_text_font(network_label_, fonts_.icon_font, 0);
 
+    // 创建通知标签
     notification_label_ = lv_label_create(status_bar_);
+    // 设置通知标签的弹性增长
     lv_obj_set_flex_grow(notification_label_, 1);
+    // 设置通知标签的文本对齐方式为居中
     lv_obj_set_style_text_align(notification_label_, LV_TEXT_ALIGN_CENTER, 0);
+    // 设置通知标签的文本为空
     lv_label_set_text(notification_label_, "");
+    // 添加隐藏标志到通知标签
     lv_obj_add_flag(notification_label_, LV_OBJ_FLAG_HIDDEN);
 
+    // 创建状态标签
     status_label_ = lv_label_create(status_bar_);
+    // 设置状态标签的弹性增长
     lv_obj_set_flex_grow(status_label_, 1);
+    // 设置状态标签的长文本模式为循环滚动
     lv_label_set_long_mode(status_label_, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    // 设置状态标签的文本对齐方式为居中
     lv_obj_set_style_text_align(status_label_, LV_TEXT_ALIGN_CENTER, 0);
+    // 设置状态标签的文本为初始化
     lv_label_set_text(status_label_, Lang::Strings::INITIALIZING);
+    // 创建静音标签
     mute_label_ = lv_label_create(status_bar_);
+    // 设置静音标签的文本为空
     lv_label_set_text(mute_label_, "");
+    // 设置静音标签的字体为图标字体
     lv_obj_set_style_text_font(mute_label_, fonts_.icon_font, 0);
 
+    // 创建电池标签
     battery_label_ = lv_label_create(status_bar_);
+    // 设置电池标签的文本为空
     lv_label_set_text(battery_label_, "");
+    // 设置电池标签的字体为图标字体
     lv_obj_set_style_text_font(battery_label_, fonts_.icon_font, 0);
 }
 
@@ -405,10 +460,14 @@ void LcdDisplay::SetEmotion(const char* emotion) {
 }
 
 void LcdDisplay::SetIcon(const char* icon) {
+    // 创建一个DisplayLockGuard对象，用于锁定显示
     DisplayLockGuard lock(this);
+    // 如果emotion_label_为空，则返回
     if (emotion_label_ == nullptr) {
         return;
     }
+    // 设置emotion_label_的字体为font_awesome_30_4
     lv_obj_set_style_text_font(emotion_label_, &font_awesome_30_4, 0);
+    // 设置emotion_label_的文本为icon
     lv_label_set_text(emotion_label_, icon);
 }

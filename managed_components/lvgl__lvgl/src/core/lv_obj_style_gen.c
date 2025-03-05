@@ -378,11 +378,14 @@ void lv_obj_set_style_border_color(lv_obj_t * obj, lv_color_t value, lv_style_se
     lv_obj_set_local_style_prop(obj, LV_STYLE_BORDER_COLOR, v, selector);
 }
 
+// 设置对象的边框透明度
 void lv_obj_set_style_border_opa(lv_obj_t * obj, lv_opa_t value, lv_style_selector_t selector)
 {
+    // 创建一个lv_style_value_t类型的变量v，并将value赋值给num
     lv_style_value_t v = {
         .num = (int32_t)value
     };
+    // 调用lv_obj_set_local_style_prop函数，设置对象的边框透明度
     lv_obj_set_local_style_prop(obj, LV_STYLE_BORDER_OPA, v, selector);
 }
 
@@ -394,19 +397,25 @@ void lv_obj_set_style_border_width(lv_obj_t * obj, int32_t value, lv_style_selec
     lv_obj_set_local_style_prop(obj, LV_STYLE_BORDER_WIDTH, v, selector);
 }
 
+// 设置对象的边框样式
 void lv_obj_set_style_border_side(lv_obj_t * obj, lv_border_side_t value, lv_style_selector_t selector)
 {
+    // 创建一个lv_style_value_t类型的变量v，并将value赋值给v的num成员
     lv_style_value_t v = {
         .num = (int32_t)value
     };
+    // 调用lv_obj_set_local_style_prop函数，设置对象的边框样式
     lv_obj_set_local_style_prop(obj, LV_STYLE_BORDER_SIDE, v, selector);
 }
 
+// 设置对象的边框后样式
 void lv_obj_set_style_border_post(lv_obj_t * obj, bool value, lv_style_selector_t selector)
 {
+    // 创建一个lv_style_value_t类型的变量v，并将value赋值给num
     lv_style_value_t v = {
         .num = (int32_t)value
     };
+    // 调用lv_obj_set_local_style_prop函数，设置对象的边框后样式
     lv_obj_set_local_style_prop(obj, LV_STYLE_BORDER_POST, v, selector);
 }
 

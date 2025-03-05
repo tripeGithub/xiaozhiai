@@ -22,9 +22,12 @@ extern "C" {
  *      DEFINES
  *********************/
 
-#define LV_FLEX_COLUMN        (1 << 0)
-#define LV_FLEX_WRAP       (1 << 2)
-#define LV_FLEX_REVERSE    (1 << 3)
+
+
+// 定义Flex布局的排列方式
+#define LV_FLEX_COLUMN        (1 << 0) // 列排列
+#define LV_FLEX_WRAP       (1 << 2) // 自动换行
+#define LV_FLEX_REVERSE    (1 << 3) // 反向排列
 
 /**********************
  *      TYPEDEFS
@@ -32,24 +35,26 @@ extern "C" {
 
 /*Can't include lv_obj.h because it includes this header file*/
 
+// 定义Flex布局的对齐方式
 typedef enum {
-    LV_FLEX_ALIGN_START,
-    LV_FLEX_ALIGN_END,
-    LV_FLEX_ALIGN_CENTER,
-    LV_FLEX_ALIGN_SPACE_EVENLY,
-    LV_FLEX_ALIGN_SPACE_AROUND,
-    LV_FLEX_ALIGN_SPACE_BETWEEN,
+    LV_FLEX_ALIGN_START, // 开始对齐
+    LV_FLEX_ALIGN_END, // 结束对齐
+    LV_FLEX_ALIGN_CENTER, // 居中对齐
+    LV_FLEX_ALIGN_SPACE_EVENLY, // 均匀分布
+    LV_FLEX_ALIGN_SPACE_AROUND, // 间隔均匀分布
+    LV_FLEX_ALIGN_SPACE_BETWEEN, // 间隔均匀分布
 } lv_flex_align_t;
 
+// 定义Flex布局的流方式
 typedef enum {
-    LV_FLEX_FLOW_ROW                 = 0x00,
-    LV_FLEX_FLOW_COLUMN              = LV_FLEX_COLUMN,
-    LV_FLEX_FLOW_ROW_WRAP            = LV_FLEX_FLOW_ROW | LV_FLEX_WRAP,
-    LV_FLEX_FLOW_ROW_REVERSE         = LV_FLEX_FLOW_ROW | LV_FLEX_REVERSE,
-    LV_FLEX_FLOW_ROW_WRAP_REVERSE    = LV_FLEX_FLOW_ROW | LV_FLEX_WRAP | LV_FLEX_REVERSE,
-    LV_FLEX_FLOW_COLUMN_WRAP         = LV_FLEX_FLOW_COLUMN | LV_FLEX_WRAP,
-    LV_FLEX_FLOW_COLUMN_REVERSE      = LV_FLEX_FLOW_COLUMN | LV_FLEX_REVERSE,
-    LV_FLEX_FLOW_COLUMN_WRAP_REVERSE = LV_FLEX_FLOW_COLUMN | LV_FLEX_WRAP | LV_FLEX_REVERSE,
+    LV_FLEX_FLOW_ROW                 = 0x00, // 行排列
+    LV_FLEX_FLOW_COLUMN              = LV_FLEX_COLUMN, // 列排列
+    LV_FLEX_FLOW_ROW_WRAP            = LV_FLEX_FLOW_ROW | LV_FLEX_WRAP, // 行排列并自动换行
+    LV_FLEX_FLOW_ROW_REVERSE         = LV_FLEX_FLOW_ROW | LV_FLEX_REVERSE, // 行排列并反向
+    LV_FLEX_FLOW_ROW_WRAP_REVERSE    = LV_FLEX_FLOW_ROW | LV_FLEX_WRAP | LV_FLEX_REVERSE, // 行排列并自动换行并反向
+    LV_FLEX_FLOW_COLUMN_WRAP         = LV_FLEX_FLOW_COLUMN | LV_FLEX_WRAP, // 列排列并自动换行
+    LV_FLEX_FLOW_COLUMN_REVERSE      = LV_FLEX_FLOW_COLUMN | LV_FLEX_REVERSE, // 列排列并反向
+    LV_FLEX_FLOW_COLUMN_WRAP_REVERSE = LV_FLEX_FLOW_COLUMN | LV_FLEX_WRAP | LV_FLEX_REVERSE, // 列排列并自动换行并反向
 } lv_flex_flow_t;
 
 /**********************
