@@ -134,7 +134,9 @@ void Application::CheckNewVersion() {
         // No new version, mark the current version as valid
         ota_.MarkCurrentVersionValid();
         std::string message = std::string(Lang::Strings::VERSION) + ota_.GetCurrentVersion();
-        display->ShowNotification(message.c_str());
+        ESP_LOGI(TAG, "show version start");
+        //display->ShowNotification(message.c_str());
+        ESP_LOGI(TAG, "show version end");
     
         if (ota_.HasActivationCode()) {
             // Activation code is valid

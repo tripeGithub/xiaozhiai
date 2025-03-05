@@ -134,8 +134,8 @@ private:
 
         JDI_LCD_Date_Init();
         JDI_LCD_DISP_PIN_Config();
-        JDI_LCD_DISP_ON();
-        JDI_LCD_Clear_Screen(CMD_ALL_CLEAR);
+        //JDI_LCD_DISP_ON();
+        //JDI_LCD_Clear_Screen(CMD_ALL_CLEAR);
 
         display_ = new SpiLcdDisplay(panel_io, panel, DISPLAY_BACKLIGHT_PIN, DISPLAY_BACKLIGHT_OUTPUT_INVERT,
                                     DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_OFFSET_X, DISPLAY_OFFSET_Y, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y, DISPLAY_SWAP_XY,
@@ -150,7 +150,7 @@ private:
 
         //JDI_LCD_Date_Init();
         //JDI_LCD_DISP_PIN_Config();
-        //JDI_LCD_DISP_ON();
+        JDI_LCD_DISP_ON();
     }
 
     // 物联网初始化，添加对 AI 可见设备

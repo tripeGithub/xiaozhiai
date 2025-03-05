@@ -83,20 +83,20 @@ void WifiBoard::StartNetwork() {
     auto& wifi_station = WifiStation::GetInstance();
     wifi_station.OnScanBegin([this]() {
         auto display = Board::GetInstance().GetDisplay();
-        display->ShowNotification(Lang::Strings::SCANNING_WIFI, 30000);
+        //display->ShowNotification(Lang::Strings::SCANNING_WIFI, 30000);
     });
     wifi_station.OnConnect([this](const std::string& ssid) {
         auto display = Board::GetInstance().GetDisplay();
         std::string notification = Lang::Strings::CONNECT_TO;
         notification += ssid;
         notification += "...";
-        display->ShowNotification(notification.c_str(), 30000);
+        //display->ShowNotification(notification.c_str(), 30000);
     });
     wifi_station.OnConnected([this](const std::string& ssid) {
         auto display = Board::GetInstance().GetDisplay();
         std::string notification = Lang::Strings::CONNECTED_TO;
         notification += ssid;
-        display->ShowNotification(notification.c_str(), 30000);
+        //display->ShowNotification(notification.c_str(), 30000);
     });
     wifi_station.Start();
 

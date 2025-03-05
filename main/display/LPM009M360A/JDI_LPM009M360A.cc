@@ -71,7 +71,7 @@ void JDI_LCD_DISP_PIN_Config(void)
     */
 
     //--------------------------------------------------------------------------------------------
-    ///*
+    /*
     //BLK PIN
     //
     //配置IO为通用IO
@@ -88,7 +88,7 @@ void JDI_LCD_DISP_PIN_Config(void)
 
     //设置CS输出低电平
     gpio_set_level((gpio_num_t)JDI_LCD_BLK_PIN, 1);
-    //*/
+    */
 }
 
 esp_err_t JDI_LCD_SPI_Config(void)

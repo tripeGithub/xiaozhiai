@@ -23,6 +23,7 @@ Display::Display() {
             // 将arg转换为Display指针
             Display *display = static_cast<Display*>(arg);
             // 创建DisplayLockGuard对象，用于锁定display
+            ESP_LOGE("Display","create DisplayLockGuard");
             DisplayLockGuard lock(display);
             // 将notification_label_的隐藏标志位设为true
             lv_obj_add_flag(display->notification_label_, LV_OBJ_FLAG_HIDDEN);
@@ -72,6 +73,7 @@ Display::~Display() {
 }
 
 void Display::SetStatus(const char* status) {
+    ESP_LOGE("Display","SetStatus");
     DisplayLockGuard lock(this);
     if (status_label_ == nullptr) {
         return;
@@ -89,21 +91,28 @@ void Display::ShowNotification(const std::string &notification, int duration_ms)
 }
 
 void Display::ShowNotification(const char* notification, int duration_ms) {
+    ESP_LOGE("ShowNotification","ShowNotification");
+    
     DisplayLockGuard lock(this);
     if (notification_label_ == nullptr) {
         return;
     }
+
+    /*
     // 设置通知标签的文本
     lv_label_set_text(notification_label_, notification);
     // 显示通知标签
     lv_obj_clear_flag(notification_label_, LV_OBJ_FLAG_HIDDEN);
     // 隐藏状态标签
     lv_obj_add_flag(status_label_, LV_OBJ_FLAG_HIDDEN);
+    
 
     // 停止通知定时器
     esp_timer_stop(notification_timer_);
     // 启动通知定时器，持续时间为duration_ms * 1000毫秒
     ESP_ERROR_CHECK(esp_timer_start_once(notification_timer_, duration_ms * 1000));
+    */
+    
 }
 
 void Display::Update() {
@@ -111,11 +120,13 @@ void Display::Update() {
     auto codec = board.GetAudioCodec();
 
     {
+        ESP_LOGE("Display","Update volume");   
         DisplayLockGuard lock(this);
         if (mute_label_ == nullptr) {
             return;
         }
-
+        
+        /*
         // 如果静音状态改变，则更新图标
         if (codec->output_volume() == 0 && !muted_) {
             muted_ = true;
@@ -124,12 +135,15 @@ void Display::Update() {
             muted_ = false;
             lv_label_set_text(mute_label_, "");
         }
+        */
     }
 
+    
     // 更新电池图标
     int battery_level;
     bool charging;
     const char* icon = nullptr;
+    
     if (board.GetBatteryLevel(battery_level, charging)) {
         if (charging) {
             icon = FONT_AWESOME_BATTERY_CHARGING;
@@ -144,12 +158,16 @@ void Display::Update() {
             };
             icon = levels[battery_level / 20];
         }
+        ESP_LOGE("Display","Update battery_level");
         DisplayLockGuard lock(this);
+        /*
         if (battery_label_ != nullptr && battery_icon_ != icon) {
             battery_icon_ = icon;
             lv_label_set_text(battery_label_, battery_icon_);
         }
+        */    
     }
+    
 
     // 升级固件时，不读取 4G 网络状态，避免占用 UART 资源
     auto device_state = Application::GetInstance().GetDeviceState();
@@ -162,9 +180,12 @@ void Display::Update() {
     if (std::find(allowed_states.begin(), allowed_states.end(), device_state) != allowed_states.end()) {
         icon = board.GetNetworkStateIcon();
         if (network_label_ != nullptr && network_icon_ != icon) {
+            ESP_LOGE("Display","Update network_icon");
             DisplayLockGuard lock(this);
             network_icon_ = icon;
+            /*
             lv_label_set_text(network_label_, network_icon_);
+            */
         }
     }
 }
@@ -200,38 +221,48 @@ void Display::SetEmotion(const char* emotion) {
         {FONT_AWESOME_EMOJI_CONFUSED, "confused"}
     };
     
+    
     // 查找匹配的表情
     std::string_view emotion_view(emotion);
     auto it = std::find_if(emotions.begin(), emotions.end(),
         [&emotion_view](const Emotion& e) { return e.text == emotion_view; });
     
+    ESP_LOGE("Display","SetEmotion");    
     DisplayLockGuard lock(this);
     if (emotion_label_ == nullptr) {
         return;
     }
 
+    /*
     // 如果找到匹配的表情就显示对应图标，否则显示默认的neutral表情
     if (it != emotions.end()) {
         lv_label_set_text(emotion_label_, it->icon);
     } else {
         lv_label_set_text(emotion_label_, FONT_AWESOME_EMOJI_NEUTRAL);
     }
+    */    
 }
 
 void Display::SetIcon(const char* icon) {
+    ESP_LOGE("Display","SetIcon");
+    /*
     DisplayLockGuard lock(this);
     if (emotion_label_ == nullptr) {
         return;
     }
     lv_label_set_text(emotion_label_, icon);
+    */
 }
 
 void Display::SetChatMessage(const char* role, const char* content) {
+    ESP_LOGE("Display","SetChatMessage");
+    
     DisplayLockGuard lock(this);
     if (chat_message_label_ == nullptr) {
         return;
     }
     lv_label_set_text(chat_message_label_, content);
+    
 }
 
 void Display::SetBacklight(uint8_t brightness) {

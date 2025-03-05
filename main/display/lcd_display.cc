@@ -17,7 +17,8 @@
 #define TAG "LcdDisplay"
 #define LCD_LEDC_CH LEDC_CHANNEL_0
 
-LV_FONT_DECLARE(font_awesome_30_4);
+//LV_FONT_DECLARE(font_awesome_30_4);
+LV_FONT_DECLARE(font_awesome_14_1);
 
 SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_handle_t panel,
                            gpio_num_t backlight_pin, bool backlight_output_invert,
@@ -99,7 +100,6 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
 
     lv_display_set_flush_cb(display_, jdi_lvgl_flush_cb);
     //lv_display_add_event_cb(display_, jdi_lvgl_invalidate_cb, LV_EVENT_INVALIDATE_AREA, display_cfg);
-
 
 
     SetupUI();
@@ -333,12 +333,14 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_flex_flow(content_, LV_FLEX_FLOW_COLUMN); // 垂直布局（从上到下）
     lv_obj_set_flex_align(content_, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_SPACE_EVENLY); // 子对象居中对齐，等距分布
 
+    /*
     // 创建一个标签对象
     emotion_label_ = lv_label_create(content_);
     // 设置标签的字体为font_awesome_30_4
-    lv_obj_set_style_text_font(emotion_label_, &font_awesome_30_4, 0);
+    lv_obj_set_style_text_font(emotion_label_, &font_awesome_14_1, 0);
     // 设置标签的文本为FONT_AWESOME_AI_CHIP
     lv_label_set_text(emotion_label_, FONT_AWESOME_AI_CHIP);
+    */
 
     // 创建一个标签，用于显示聊天消息
     chat_message_label_ = lv_label_create(content_);
@@ -445,11 +447,13 @@ void LcdDisplay::SetEmotion(const char* emotion) {
     auto it = std::find_if(emotions.begin(), emotions.end(),
         [&emotion_view](const Emotion& e) { return e.text == emotion_view; });
 
+    ESP_LOGE("LcdDisplay","SetEmotion");     
     DisplayLockGuard lock(this);
     if (emotion_label_ == nullptr) {
         return;
     }
 
+    /*
     // 如果找到匹配的表情就显示对应图标，否则显示默认的neutral表情
     lv_obj_set_style_text_font(emotion_label_, fonts_.emoji_font, 0);
     if (it != emotions.end()) {
@@ -457,17 +461,23 @@ void LcdDisplay::SetEmotion(const char* emotion) {
     } else {
         lv_label_set_text(emotion_label_, "😶");
     }
+    */
 }
 
 void LcdDisplay::SetIcon(const char* icon) {
+    
+    ESP_LOGE("LcdDisplay","SetIcon"); 
     // 创建一个DisplayLockGuard对象，用于锁定显示
     DisplayLockGuard lock(this);
     // 如果emotion_label_为空，则返回
     if (emotion_label_ == nullptr) {
         return;
     }
+
+    /*
     // 设置emotion_label_的字体为font_awesome_30_4
     lv_obj_set_style_text_font(emotion_label_, &font_awesome_30_4, 0);
     // 设置emotion_label_的文本为icon
     lv_label_set_text(emotion_label_, icon);
+    */
 }

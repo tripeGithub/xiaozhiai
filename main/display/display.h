@@ -61,11 +61,14 @@ protected:
 
 class DisplayLockGuard {
 public:
+    // 构造函数，传入一个Display指针，将其赋值给display_成员变量
     DisplayLockGuard(Display *display) : display_(display) {
+        // 调用display_的Lock函数，传入3000作为参数，如果返回值为false，则输出错误日志
         if (!display_->Lock(3000)) {
             ESP_LOGE("Display", "Failed to lock display");
         }
     }
+    // 析构函数，调用display_的Unlock函数
     ~DisplayLockGuard() {
         display_->Unlock();
     }
