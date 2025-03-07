@@ -138,7 +138,7 @@ private:
         //JDI_LCD_DISP_ON();
         //JDI_LCD_Clear_Screen(CMD_ALL_CLEAR);
 
-        display_ = new SpiLcdDisplay(panel_io, panel, DISPLAY_BACKLIGHT_PIN, DISPLAY_BACKLIGHT_OUTPUT_INVERT,
+        display_ = new SpiLcdDisplay(panel_io, panel,
                                     DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_OFFSET_X, DISPLAY_OFFSET_Y, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y, DISPLAY_SWAP_XY,
                                     {
                                         // .text_font = &font_puhui_20_4,
@@ -171,6 +171,7 @@ public:
         InitializeSt7789Display();
         InitializeButtons();
         InitializeIot();
+		//GetBacklight()->RestoreBrightness();
     }
 
     virtual Led* GetLed() override {
@@ -202,6 +203,11 @@ public:
 
     virtual Display* GetDisplay() override {
         return display_;
+    }
+    
+    virtual Backlight* GetBacklight() override {
+        static PwmBacklight backlight(DISPLAY_BACKLIGHT_PIN, DISPLAY_BACKLIGHT_OUTPUT_INVERT);
+        return &backlight;
     }
 };
 

@@ -152,6 +152,20 @@ dependencies:
       registry_url: https://components.espressif.com/
       type: service
     version: 2.0.0
+  espressif/esp_io_expander_tca95xx_16bit:
+    component_hash: f0c87a480d3e341fcfa3f7d00890270da1325a294a7d26ddeb5af5fb3ce8ba54
+    dependencies:
+    - name: idf
+      require: private
+      version: '>=5.2'
+    - name: espressif/esp_io_expander
+      registry_url: https://components.espressif.com
+      require: public
+      version: ^1.0.1
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 2.0.0
   espressif/esp_lcd_gc9a01:
     component_hash: 018d015a5a6f9e04aed401d58eca66a1dbd603388a3ccf66666a08d8e12551a5
     dependencies:
@@ -289,6 +303,7 @@ direct_dependencies:
 - espressif/esp-sr
 - espressif/esp_codec_dev
 - espressif/esp_io_expander_tca9554
+- espressif/esp_io_expander_tca95xx_16bit
 - espressif/esp_lcd_gc9a01
 - espressif/esp_lcd_ili9341
 - espressif/esp_lcd_panel_io_additions
@@ -299,6 +314,6 @@ direct_dependencies:
 - idf
 - lvgl/lvgl
 - waveshare/esp_lcd_sh8601
-manifest_hash: a46367168ec7dd54ebbefe19da2d6b4adf89289e6c0868fba11703a300523c4a
+manifest_hash: c6b21e10e4be0f88769b6648ad58b32bd9feee7ebc4aa1ef4a51c634629ad1e8
 target: esp32s3
 version: 2.0.0

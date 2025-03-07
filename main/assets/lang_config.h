@@ -14,6 +14,7 @@ namespace Lang {
         constexpr const char* BATTERY_CHARGING = "正在充电";
         constexpr const char* BATTERY_FULL = "电量已满";
         constexpr const char* BATTERY_LOW = "电量不足";
+        constexpr const char* BATTERY_NEED_CHARGE = "电量低，请充电";
         constexpr const char* CONNECTED_TO = "已连接 ";
         constexpr const char* CONNECTING = "连接中...";
         constexpr const char* CONNECT_TO = "连接 ";
@@ -146,6 +147,13 @@ namespace Lang {
         static const std::string_view P3_EXCLAMATION {
         static_cast<const char*>(p3_exclamation_start),
         static_cast<size_t>(p3_exclamation_end - p3_exclamation_start)
+        };
+
+        extern const char p3_low_battery_start[] asm("_binary_low_battery_p3_start");
+        extern const char p3_low_battery_end[] asm("_binary_low_battery_p3_end");
+        static const std::string_view P3_LOW_BATTERY {
+        static_cast<const char*>(p3_low_battery_start),
+        static_cast<size_t>(p3_low_battery_end - p3_low_battery_start)
         };
 
         extern const char p3_success_start[] asm("_binary_success_p3_start");
