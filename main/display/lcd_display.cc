@@ -80,9 +80,9 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
         .color_format = LV_COLOR_FORMAT_RGB565,
         .flags = {
             .buff_dma = 1,
-            .buff_spiram = 0,
+            .buff_spiram = 1,
             .sw_rotate = 0,
-            .swap_bytes = 1,
+            .swap_bytes = 0,
             .full_refresh = 0,
             .direct_mode = 0,
         },
@@ -104,7 +104,7 @@ SpiLcdDisplay::SpiLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
 
     SetupUI();
 
-    SetBacklight(brightness_);
+    //SetBacklight(brightness_);
 }
 
 // RGB LCD实现
@@ -129,7 +129,7 @@ RgbLcdDisplay::RgbLcdDisplay(esp_lcd_panel_io_handle_t panel_io, esp_lcd_panel_h
         .skip_unhandled_events = true,
     };
     ESP_ERROR_CHECK(esp_timer_create(&timer_args, &backlight_timer_));
-    InitializeBacklight(backlight_pin);
+    //InitializeBacklight(backlight_pin);
     
     // draw white
     std::vector<uint16_t> buffer(width_, 0xFFFF);
@@ -305,7 +305,8 @@ void LcdDisplay::SetupUI() {
     // 创建一个容器对象
     container_ = lv_obj_create(screen);
     // 设置容器对象的大小为屏幕大小
-    lv_obj_set_size(container_, LV_HOR_RES, LV_VER_RES);
+    //lv_obj_set_size(container_, LV_HOR_RES, LV_VER_RES);
+    lv_obj_set_size(container_, 72, 144);
     // 设置容器对象的布局方式为垂直布局
     lv_obj_set_flex_flow(container_, LV_FLEX_FLOW_COLUMN);
     // 设置容器对象的内边距为0
@@ -319,7 +320,8 @@ void LcdDisplay::SetupUI() {
     // 创建状态栏对象
     status_bar_ = lv_obj_create(container_);
     // 设置状态栏大小
-    lv_obj_set_size(status_bar_, LV_HOR_RES, fonts_.text_font->line_height);
+    //lv_obj_set_size(status_bar_, LV_HOR_RES, fonts_.text_font->line_height);
+    lv_obj_set_size(status_bar_, 72, fonts_.text_font->line_height);
     // 设置状态栏圆角
     lv_obj_set_style_radius(status_bar_, 0, 0);
     
@@ -349,6 +351,7 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_width(chat_message_label_, LV_HOR_RES * 0.9); // 限制宽度为屏幕宽度的 90%
     lv_label_set_long_mode(chat_message_label_, LV_LABEL_LONG_WRAP); // 设置为自动换行模式
     lv_obj_set_style_text_align(chat_message_label_, LV_TEXT_ALIGN_CENTER, 0); // 设置文本居中对齐
+    
 
     //lv_obj_set_style_border_width(chat_message_label_, 0, 0);
     //lv_obj_set_style_border_opa(chat_message_label_, LV_OPA_TRANSP, 0);
@@ -369,12 +372,14 @@ void LcdDisplay::SetupUI() {
 
     //lv_obj_set_style_border_opa(status_bar_, LV_OPA_TRANSP, 0);
 
+    /*
     // 创建一个标签对象，用于显示网络状态
     network_label_ = lv_label_create(status_bar_);
     // 设置标签的文本为空
     lv_label_set_text(network_label_, "");
     // 设置标签的字体为图标字体
     lv_obj_set_style_text_font(network_label_, fonts_.icon_font, 0);
+    */
 
     // 创建通知标签
     notification_label_ = lv_label_create(status_bar_);
@@ -382,6 +387,8 @@ void LcdDisplay::SetupUI() {
     lv_obj_set_flex_grow(notification_label_, 1);
     // 设置通知标签的文本对齐方式为居中
     lv_obj_set_style_text_align(notification_label_, LV_TEXT_ALIGN_CENTER, 0);
+    // 设置字体颜色
+    lv_obj_set_style_text_color(notification_label_, lv_color_make(255, 0, 0), LV_PART_MAIN);
     // 设置通知标签的文本为空
     lv_label_set_text(notification_label_, "");
     // 添加隐藏标志到通知标签
@@ -395,21 +402,28 @@ void LcdDisplay::SetupUI() {
     lv_label_set_long_mode(status_label_, LV_LABEL_LONG_SCROLL_CIRCULAR);
     // 设置状态标签的文本对齐方式为居中
     lv_obj_set_style_text_align(status_label_, LV_TEXT_ALIGN_CENTER, 0);
+    // 设置字体颜色
+    lv_obj_set_style_text_color(status_label_, lv_color_make(255, 0, 0), LV_PART_MAIN); 
     // 设置状态标签的文本为初始化
     lv_label_set_text(status_label_, Lang::Strings::INITIALIZING);
+
+    /*
     // 创建静音标签
     mute_label_ = lv_label_create(status_bar_);
     // 设置静音标签的文本为空
     lv_label_set_text(mute_label_, "");
     // 设置静音标签的字体为图标字体
     lv_obj_set_style_text_font(mute_label_, fonts_.icon_font, 0);
+    */
 
+    /*
     // 创建电池标签
     battery_label_ = lv_label_create(status_bar_);
     // 设置电池标签的文本为空
     lv_label_set_text(battery_label_, "");
     // 设置电池标签的字体为图标字体
     lv_obj_set_style_text_font(battery_label_, fonts_.icon_font, 0);
+    */
 }
 
 void LcdDisplay::SetEmotion(const char* emotion) {

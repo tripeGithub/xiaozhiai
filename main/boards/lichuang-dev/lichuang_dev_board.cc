@@ -22,6 +22,7 @@
 //LV_FONT_DECLARE(font_puhui_20_4);
 //LV_FONT_DECLARE(font_awesome_20_4);
 LV_FONT_DECLARE(font_puhui_14_1);
+//LV_FONT_DECLARE(lv_font_misans_12);
 LV_FONT_DECLARE(font_awesome_14_1);
 
 class Pca9557 : public I2cDevice {
@@ -70,9 +71,9 @@ private:
 
     void InitializeSpi() {
         spi_bus_config_t buscfg = {};
-        buscfg.mosi_io_num = GPIO_NUM_2;//GPIO_NUM_40;
+        buscfg.mosi_io_num = GPIO_NUM_2;//GPIO_NUM_11;//GPIO_NUM_2;//GPIO_NUM_40;
         buscfg.miso_io_num = GPIO_NUM_NC;
-        buscfg.sclk_io_num = GPIO_NUM_5;//GPIO_NUM_41;
+        buscfg.sclk_io_num = GPIO_NUM_5;//GPIO_NUM_12;//GPIO_NUM_5;//GPIO_NUM_41;
         buscfg.quadwp_io_num = GPIO_NUM_NC;
         buscfg.quadhd_io_num = GPIO_NUM_NC;
         buscfg.max_transfer_sz = DISPLAY_WIDTH * DISPLAY_HEIGHT * sizeof(uint16_t);
@@ -102,12 +103,12 @@ private:
         // 液晶屏控制IO初始化
         ESP_LOGD(TAG, "Install panel IO");
         esp_lcd_panel_io_spi_config_t io_config = {};
-        io_config.cs_gpio_num = GPIO_NUM_4;//GPIO_NUM_NC;
+        io_config.cs_gpio_num = GPIO_NUM_4;//GPIO_NUM_13;//GPIO_NUM_4;//GPIO_NUM_NC;
         io_config.dc_gpio_num = GPIO_NUM_NC;//GPIO_NUM_39;
         //io_config.spi_mode = 2;
         io_config.spi_mode = 0;
         io_config.flags.cs_high_active = 1,
-        io_config.pclk_hz = 4000000;//80 * 1000 * 1000;
+        io_config.pclk_hz = 2000000;//80 * 1000 * 1000;
         io_config.trans_queue_depth = 10;
         io_config.lcd_cmd_bits = 8;
         io_config.lcd_param_bits = 8;
@@ -144,13 +145,16 @@ private:
                                         // .icon_font = &font_awesome_20_4,
                                         // .emoji_font = font_emoji_64_init(),
                                         .text_font = &font_puhui_14_1,
+                                        //.text_font = &lv_font_misans_12,
                                         .icon_font = &font_awesome_14_1,
                                         .emoji_font = font_emoji_32_init(),
                                     });
 
         //JDI_LCD_Date_Init();
         //JDI_LCD_DISP_PIN_Config();
+        //JDI_LCD_Clear_Screen(CMD_ALL_CLEAR);
         JDI_LCD_DISP_ON();
+        
     }
 
     // 物联网初始化，添加对 AI 可见设备

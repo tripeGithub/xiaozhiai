@@ -8,7 +8,7 @@
     "idf.openOcdConfigs": [
         "board/esp32s3-builtin.cfg"
     ],
-    "idf.portWin": "COM22",
+    "idf.portWin": "COM6",
     "idf.flashType": "UART",
     "files.associations": {
         "esp_lvgl_port_priv.h": "c",

@@ -579,14 +579,19 @@ static void lvgl_port_flush_callback(lv_display_t *drv, const lv_area_t *area, u
             uint32_t w_stride = lv_draw_buf_width_to_stride(ww, cf);
             uint32_t h_stride = lv_draw_buf_width_to_stride(hh, cf);
             if (disp_ctx->current_rotation == LV_DISPLAY_ROTATION_180) {
+                // 旋转180度
                 lv_draw_sw_rotate(color_map, disp_ctx->draw_buffs[2], hh, ww, h_stride, h_stride, LV_DISPLAY_ROTATION_180, cf);
             } else if (disp_ctx->current_rotation == LV_DISPLAY_ROTATION_90) {
+                // 旋转90度
                 lv_draw_sw_rotate(color_map, disp_ctx->draw_buffs[2], ww, hh, w_stride, h_stride, LV_DISPLAY_ROTATION_90, cf);
             } else if (disp_ctx->current_rotation == LV_DISPLAY_ROTATION_270) {
+                // 旋转270度
                 lv_draw_sw_rotate(color_map, disp_ctx->draw_buffs[2], ww, hh, w_stride, h_stride, LV_DISPLAY_ROTATION_270, cf);
             }
             color_map = (uint8_t *)disp_ctx->draw_buffs[2];
+            // 旋转区域
             lvgl_port_rotate_area(drv, (lv_area_t *)area);
+            // 更新偏移量
             offsetx1 = area->x1;
             offsetx2 = area->x2;
             offsety1 = area->y1;
@@ -594,22 +599,31 @@ static void lvgl_port_flush_callback(lv_display_t *drv, const lv_area_t *area, u
         }
     }
 
+    // 如果disp_ctx的flags中swap_bytes标志位为真，则执行以下代码
     if (disp_ctx->flags.swap_bytes) {
+        // 获取area的大小
         size_t len = lv_area_get_size(area);
+        // 将color_map中的颜色值进行字节交换
         lv_draw_sw_rgb565_swap(color_map, len);
     }
 
     /* Transfer data in buffer for monochromatic screen */
+    // 如果屏幕是单色的，则将缓冲区中的数据传输到屏幕上
     if (disp_ctx->flags.monochrome) {
+        // 调用_lvgl_port_transform_monochrome函数，将缓冲区中的数据转换为单色并传输到屏幕上
         _lvgl_port_transform_monochrome(drv, area, &color_map);
     }
 
+    // 如果显示类型为RGB或DSI，并且直接模式或全刷新标志被设置
     if ((disp_ctx->disp_type == LVGL_PORT_DISP_TYPE_RGB || disp_ctx->disp_type == LVGL_PORT_DISP_TYPE_DSI) && (disp_ctx->flags.direct_mode || disp_ctx->flags.full_refresh)) {
+        // 如果是最后一个刷新帧
         if (lv_disp_flush_is_last(drv)) {
             /* If the interface is I80 or SPI, this step cannot be used for drawing. */
             esp_lcd_panel_draw_bitmap(disp_ctx->panel_handle, 0, 0, lv_disp_get_hor_res(drv), lv_disp_get_ver_res(drv), color_map);
             /* Waiting for the last frame buffer to complete transmission */
+            // 尝试获取disp_ctx->trans_sem信号量，不等待
             xSemaphoreTake(disp_ctx->trans_sem, 0);
+            // 获取disp_ctx->trans_sem信号量，等待直到获取成功
             xSemaphoreTake(disp_ctx->trans_sem, portMAX_DELAY);
         }
     } else {

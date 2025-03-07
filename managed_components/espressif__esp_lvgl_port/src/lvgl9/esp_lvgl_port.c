@@ -171,31 +171,39 @@ void lvgl_port_unlock(void)
 esp_err_t lvgl_port_task_wake(lvgl_port_event_type_t event, void *param)
 {
     EventBits_t bits = 0;
+    // 检查lvgl_port_ctx.lvgl_events是否为空，如果为空则返回错误状态
     if (!lvgl_port_ctx.lvgl_events) {
         return ESP_ERR_INVALID_STATE;
     }
 
     /* Get unprocessed bits */
+    // 如果当前处于中断上下文，则从中断上下文中获取未处理的位
     if (xPortInIsrContext() == pdTRUE) {
         bits = xEventGroupGetBitsFromISR(lvgl_port_ctx.lvgl_events);
     } else {
+        // 否则从任务上下文中获取未处理的位
         bits = xEventGroupGetBits(lvgl_port_ctx.lvgl_events);
     }
 
     /* Set event */
+    // 设置事件
     bits |= event;
 
     /* Save */
+    // 如果当前处于中断上下文，则从中断上下文中保存事件
     if (xPortInIsrContext() == pdTRUE) {
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
         xEventGroupSetBitsFromISR(lvgl_port_ctx.lvgl_events, bits, &xHigherPriorityTaskWoken);
+        // 如果有更高优先级的任务需要被唤醒，则进行上下文切换
         if (xHigherPriorityTaskWoken) {
             portYIELD_FROM_ISR( );
         }
     } else {
+        // 否则从任务上下文中保存事件
         xEventGroupSetBits(lvgl_port_ctx.lvgl_events, bits);
     }
 
+    // 返回成功状态
     return ESP_OK;
 }
 

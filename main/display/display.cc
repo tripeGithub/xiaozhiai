@@ -263,6 +263,8 @@ void Display::SetChatMessage(const char* role, const char* content) {
     }
     lv_label_set_text(chat_message_label_, content);
     
+    //lv_obj_t * parent = lv_obj_get_parent((lv_obj_t *)chat_message_label_);
+    //lv_obj_invalidate(parent);
 }
 
 void Display::SetBacklight(uint8_t brightness) {

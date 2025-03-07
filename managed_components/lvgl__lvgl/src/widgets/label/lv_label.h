@@ -47,9 +47,13 @@ LV_EXPORT_CONST_INT(LV_LABEL_TEXT_SELECTION_OFF);
 /** Long mode behaviors. Used in 'lv_label_ext_t'*/
 typedef enum {
     LV_LABEL_LONG_WRAP,             /**< Keep the object width, wrap lines longer than object width and expand the object height*/
+    // 保持对象宽度，将超过对象宽度的行换行，并扩展对象高度
     LV_LABEL_LONG_DOT,              /**< Keep the size and write dots at the end if the text is too long*/
+    // 保持大小，如果文本太长，则在末尾写上省略号
     LV_LABEL_LONG_SCROLL,           /**< Keep the size and roll the text back and forth*/
+    // 保持大小，来回滚动文本
     LV_LABEL_LONG_SCROLL_CIRCULAR,  /**< Keep the size and roll the text circularly*/
+    // 保持大小，循环滚动文本
     LV_LABEL_LONG_CLIP,             /**< Keep the size and clip the text out of it*/
 } lv_label_long_mode_t;
 
