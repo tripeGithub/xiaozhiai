@@ -205,10 +205,12 @@ public:
         return display_;
     }
     
+    /*
     virtual Backlight* GetBacklight() override {
         static PwmBacklight backlight(DISPLAY_BACKLIGHT_PIN, DISPLAY_BACKLIGHT_OUTPUT_INVERT);
         return &backlight;
     }
+    */
 };
 
 DECLARE_BOARD(LichuangDevBoard);
